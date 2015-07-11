@@ -48,6 +48,7 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
     public static class EntryViewHolder extends RecyclerView.ViewHolder {
 
         @Bind(R.id.txt_date) TextView dateText;
+        @Bind(R.id.txt_category) TextView categoryText;
         @Bind(R.id.txt_amount) TextView amountText;
         @Bind(R.id.txt_description) TextView descriptionText;
         @Bind(R.id.chk_in_rules) CheckBox rulesCheck;
@@ -60,6 +61,7 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
 
         public void bind(Entry entry) {
             dateText.setText(entry.getDate().toString());
+            categoryText.setText(entry.getCategory());
             amountText.setText(String.valueOf(entry.getAmount()));
             descriptionText.setText(entry.getDescription());
             rulesCheck.setChecked(entry.isInRules());
