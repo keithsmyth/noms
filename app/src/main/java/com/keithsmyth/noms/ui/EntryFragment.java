@@ -131,10 +131,6 @@ public class EntryFragment extends Fragment {
         entry.setInRules(rulesCheck.isChecked());
 
         entry.setComment(commentText.getText().toString());
-        if (TextUtils.isEmpty(entry.getComment())) {
-            isValid = false;
-            commentText.setError(getString(R.string.cannot_be_empty));
-        }
 
         return isValid;
     }
