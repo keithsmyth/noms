@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Noms</string>
+    <string name="date">Date</string>
+    <string name="amount">Amount</string>
+    <string name="description">description</string>
+    <string name="category">category</string>
+    <string name="in_rules">In rules?</string>
+    <string name="comment">comment</string>
+    <string name="save">Save</string>
+    <string name="unable_to_parse_date">Unable to parse date</string>
+    <string name="cannot_be_empty">Cannot be empty</string>
+    <string name="must_greater_zero">Must be greater than 0</string>
+</resources>

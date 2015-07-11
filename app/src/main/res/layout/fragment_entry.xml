@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="@dimen/margin"
+                android:paddingRight="@dimen/margin">
+
+    <Button
+        android:id="@+id/btn_save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="@string/save"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/btn_save"
+        android:layout_alignParentTop="true">
+
+        <LinearLayout
+            android:id="@+id/layout_controls"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.keithsmyth.noms.ui.CustomTextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/txt_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/date"
+                    android:imeOptions="actionNext"
+                    android:inputType="datetime"/>
+            </com.keithsmyth.noms.ui.CustomTextInputLayout>
+
+            <com.keithsmyth.noms.ui.CustomTextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/txt_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/category"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"/>
+            </com.keithsmyth.noms.ui.CustomTextInputLayout>
+
+            <com.keithsmyth.noms.ui.CustomTextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/txt_amount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/amount"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"/>
+            </com.keithsmyth.noms.ui.CustomTextInputLayout>
+
+            <com.keithsmyth.noms.ui.CustomTextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/txt_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/description"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"/>
+            </com.keithsmyth.noms.ui.CustomTextInputLayout>
+
+            <CheckBox
+                android:id="@+id/chk_in_rules"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/in_rules"/>
+
+            <com.keithsmyth.noms.ui.CustomTextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/txt_comment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/comment"
+                    android:imeOptions="actionDone"
+                    android:inputType="text"/>
+            </com.keithsmyth.noms.ui.CustomTextInputLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+</RelativeLayout>
