@@ -17,22 +17,11 @@ import rx.Observable;
 /**
  * @author keithsmyth
  */
-public class DataManager {
+public class DataManager implements IDataManager {
 
     private final Map<String, Entry> entryCache = new ArrayMap<>();
 
-    private static DataManager sInstance;
-
-    public static DataManager get() {
-        if (sInstance == null) {
-            sInstance = new DataManager();
-        }
-        return sInstance;
-    }
-
-    private DataManager() {
-        // no public construction
-
+    public DataManager() {
         // create some mock data
         final Entry entry = new Entry();
         entry.setDate(new Date());
@@ -48,17 +37,17 @@ public class DataManager {
         Log.i(getClass().getSimpleName(), log);
     }
 
-    public Observable<Collection<Entry>> getEntryList() {
+    @Override public Observable<Collection<Entry>> getEntryList() {
         log("getEntryList " + entryCache.size());
         return Observable.just(entryCache.values()).delay(1, TimeUnit.SECONDS); // this will break ordering
     }
 
-    public Observable<Entry> getEntry(String objectId) {
+    @Override public Observable<Entry> getEntry(String objectId) {
         final Entry entry = entryCache.get(objectId);
         return Observable.just(entry).delay(1, TimeUnit.SECONDS);
     }
 
-    public Observable<Entry> saveEntry(Entry entry) {
+    @Override public Observable<Entry> saveEntry(Entry entry) {
         // mimic random objectId from Parse
         if (TextUtils.isEmpty(entry.getObjectId())) {
             entry.setObjectId(UUID.randomUUID().toString());

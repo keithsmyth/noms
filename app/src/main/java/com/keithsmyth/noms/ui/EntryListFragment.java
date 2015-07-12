@@ -9,9 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.keithsmyth.noms.App;
 import com.keithsmyth.noms.R;
 import com.keithsmyth.noms.adapter.EntryAdapter;
 import com.keithsmyth.noms.data.DataManager;
+import com.keithsmyth.noms.data.IDataManager;
 import com.keithsmyth.noms.model.Entry;
 
 import butterknife.ButterKnife;
@@ -57,7 +59,7 @@ public class EntryListFragment extends Fragment {
         final EntryAdapter entryAdapter = new EntryAdapter();
         entriesRecycler.setAdapter(entryAdapter);
 
-        subscriptionManager.add(DataManager.get().getEntryList()
+        subscriptionManager.add(App.getDataManager().getEntryList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .cache()

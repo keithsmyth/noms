@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import com.keithsmyth.noms.App;
 import com.keithsmyth.noms.R;
 import com.keithsmyth.noms.data.DataManager;
 import com.keithsmyth.noms.model.Entry;
@@ -94,7 +95,7 @@ public class EntryFragment extends Fragment {
         }
 
         // load existing
-        subscriptionManager.add(DataManager.get().getEntry(objectId)
+        subscriptionManager.add(App.getDataManager().getEntry(objectId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .cache()
@@ -130,7 +131,7 @@ public class EntryFragment extends Fragment {
             return;
         }
 
-        subscriptionManager.add(DataManager.get().saveEntry(entry)
+        subscriptionManager.add(App.getDataManager().saveEntry(entry)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Entry>() {
