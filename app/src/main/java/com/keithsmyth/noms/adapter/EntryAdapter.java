@@ -13,10 +13,17 @@ import com.keithsmyth.noms.model.Entry;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.Observable;
+import rx.Subscriber;
 import rx.functions.Action1;
+import rx.subjects.PublishSubject;
 
 /**
  * @author keithsmyth
@@ -25,6 +32,11 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
         implements Action1<Collection<Entry>> {
 
     private final List<Entry> entryList = new ArrayList<>();
+    private final PublishSubject<Entry> entryClickSubject = PublishSubject.create();
+
+    public Observable<Entry> getEntryClickObservable() {
+        return entryClickSubject;
+    }
 
     @Override public void call(Collection<Entry> list) {
         entryList.clear();
@@ -39,7 +51,7 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
     }
 
     @Override public void onBindViewHolder(EntryViewHolder holder, int position) {
-        holder.bind(entryList.get(position));
+        holder.bind(entryList.get(position), entryClickSubject);
     }
 
     @Override public int getItemCount() {
@@ -60,7 +72,12 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
             ButterKnife.bind(this, itemView);
         }
 
-        public void bind(Entry entry) {
+        public void bind(final Entry entry, final PublishSubject<Entry> entryClickSubject) {
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    entryClickSubject.onNext(entry);
+                }
+            });
             dateText.setText(entry.getDate().toString());
             categoryText.setText(entry.getCategory());
             amountText.setText(String.valueOf(entry.getAmount()));

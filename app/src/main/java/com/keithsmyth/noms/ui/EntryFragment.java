@@ -34,9 +34,8 @@ import rx.schedulers.Schedulers;
  */
 public class EntryFragment extends Fragment {
 
+    private static final String KEY_OBJECT_ID = "object-id";
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.ENGLISH);
-    private Navigatable nav;
-    private Subscription sub;
 
     @Bind(R.id.txt_date) EditText dateText;
     @Bind(R.id.txt_category) EditText categoryText;
@@ -45,7 +44,23 @@ public class EntryFragment extends Fragment {
     @Bind(R.id.chk_in_rules) CheckBox rulesCheck;
     @Bind(R.id.txt_comment) EditText commentText;
 
+    private Navigatable nav;
     private final SubscriptionManager subscriptionManager = new SubscriptionManager();
+    private String objectId;
+    private Entry entry;
+
+    public static EntryFragment createForNew() {
+        return new EntryFragment();
+    }
+
+    public static EntryFragment createForExisting(String objectId) {
+        final Bundle args = new Bundle();
+        args.putString(KEY_OBJECT_ID, objectId);
+        final EntryFragment fragment = new EntryFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override public void onAttach(Activity activity) {
         super.onAttach(activity);
         nav = (Navigatable) activity;
@@ -54,6 +69,11 @@ public class EntryFragment extends Fragment {
     @Override public void onDetach() {
         super.onDetach();
         nav = null;
+    }
+
+    @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        objectId = getArguments().getString(KEY_OBJECT_ID, null);
     }
 
     @Nullable @Override
@@ -65,7 +85,35 @@ public class EntryFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
-        dateText.setText(DATE_FORMAT.format(new Date()));
+        if (TextUtils.isEmpty(objectId)) {
+            dateText.setText(DATE_FORMAT.format(new Date()));
+            return;
+        }
+
+        if (savedInstanceState != null) {
+            return;
+        }
+
+        // load existing
+        subscriptionManager.add(DataManager.get().getEntry(objectId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .cache()
+                .subscribe(new Action1<Entry>() {
+                    @Override public void call(Entry entry) {
+                        populateExisting(entry);
+                    }
+                }));
+    }
+
+    private void populateExisting(Entry entry) {
+        this.entry = entry;
+        dateText.setText(DATE_FORMAT.format(entry.getDate()));
+        categoryText.setText(entry.getCategory());
+        amountText.setText(String.valueOf(entry.getAmount()));
+        descriptionText.setText(entry.getDescription());
+        rulesCheck.setChecked(entry.isInRules());
+        commentText.setText(entry.getComment());
     }
 
     @Override public void onDestroyView() {
@@ -74,7 +122,7 @@ public class EntryFragment extends Fragment {
     }
 
     @OnClick(R.id.btn_save) public void onSaveClick() {
-        final Entry entry = new Entry();
+        final Entry entry = this.entry != null ? this.entry : new Entry();
 
         if (!isValid(entry)) {
             return;

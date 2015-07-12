@@ -12,10 +12,12 @@ import android.view.ViewGroup;
 import com.keithsmyth.noms.R;
 import com.keithsmyth.noms.adapter.EntryAdapter;
 import com.keithsmyth.noms.data.DataManager;
+import com.keithsmyth.noms.model.Entry;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 import static butterknife.ButterKnife.findById;
@@ -48,16 +50,28 @@ public class EntryListFragment extends Fragment {
     @Override public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+
         final RecyclerView entriesRecycler = findById(view, R.id.rcy_entries);
         entriesRecycler.setHasFixedSize(true);
         entriesRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         final EntryAdapter entryAdapter = new EntryAdapter();
         entriesRecycler.setAdapter(entryAdapter);
+
         subscriptionManager.add(DataManager.get().getEntryList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .cache()
                 .subscribe(entryAdapter));
+
+        subscriptionManager.add(entryAdapter.getEntryClickObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Entry>() {
+                    @Override public void call(Entry entry) {
+                        final Fragment fragment = EntryFragment.createForExisting(entry.getObjectId());
+                        nav.next(fragment);
+                    }
+                }));
     }
 
     @Override public void onDestroyView() {
@@ -66,7 +80,7 @@ public class EntryListFragment extends Fragment {
     }
 
     @OnClick(R.id.btn_add) public void onAddClick() {
-        nav.next(new EntryFragment());
+        nav.next(EntryFragment.createForNew());
     }
 
     @Override public void onDestroy() {

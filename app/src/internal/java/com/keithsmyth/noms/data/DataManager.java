@@ -7,6 +7,7 @@ import android.util.Log;
 import com.keithsmyth.noms.model.Entry;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -31,6 +32,16 @@ public class DataManager {
 
     private DataManager() {
         // no public construction
+
+        // create some mock data
+        final Entry entry = new Entry();
+        entry.setDate(new Date());
+        entry.setCategory("Category");
+        entry.setAmount(1);
+        entry.setDescription("Description");
+        entry.setInRules(true);
+        entry.setComment("Comment");
+        saveEntry(entry);
     }
 
     private void log(String log) {
@@ -40,6 +51,11 @@ public class DataManager {
     public Observable<Collection<Entry>> getEntryList() {
         log("getEntryList " + entryCache.size());
         return Observable.just(entryCache.values()).delay(1, TimeUnit.SECONDS); // this will break ordering
+    }
+
+    public Observable<Entry> getEntry(String objectId) {
+        final Entry entry = entryCache.get(objectId);
+        return Observable.just(entry).delay(1, TimeUnit.SECONDS);
     }
 
     public Observable<Entry> saveEntry(Entry entry) {
