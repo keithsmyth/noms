@@ -47,7 +47,6 @@ public class EntryFragment extends Fragment {
     private Navigatable nav;
     private final SubscriptionManager subscriptionManager = new SubscriptionManager();
     private String objectId;
-    private Entry entry;
 
     public static EntryFragment createForNew() {
         return new EntryFragment();
@@ -107,7 +106,6 @@ public class EntryFragment extends Fragment {
     }
 
     private void populateExisting(Entry entry) {
-        this.entry = entry;
         dateText.setText(DATE_FORMAT.format(entry.getDate()));
         categoryText.setText(entry.getCategory());
         amountText.setText(String.valueOf(entry.getAmount()));
@@ -122,7 +120,11 @@ public class EntryFragment extends Fragment {
     }
 
     @OnClick(R.id.btn_save) public void onSaveClick() {
-        final Entry entry = this.entry != null ? this.entry : new Entry();
+        final Entry entry = new Entry();
+
+        if (!TextUtils.isEmpty(objectId)) {
+            entry.setObjectId(objectId);
+        }
 
         if (!isValid(entry)) {
             return;
