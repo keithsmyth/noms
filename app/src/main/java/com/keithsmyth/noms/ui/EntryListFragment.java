@@ -15,7 +15,6 @@ import com.keithsmyth.noms.data.DataManager;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -28,7 +27,7 @@ import static butterknife.ButterKnife.findById;
 public class EntryListFragment extends Fragment {
 
     private Navigatable nav;
-    private Subscription sub;
+    private final SubscriptionManager subscriptionManager = new SubscriptionManager();
 
     @Override public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -54,11 +53,11 @@ public class EntryListFragment extends Fragment {
         entriesRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         final EntryAdapter entryAdapter = new EntryAdapter();
         entriesRecycler.setAdapter(entryAdapter);
-        sub = DataManager.get().getEntryList()
+        subscriptionManager.add(DataManager.get().getEntryList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .cache()
-                .subscribe(entryAdapter);
+                .subscribe(entryAdapter));
     }
 
     @Override public void onDestroyView() {
@@ -72,8 +71,6 @@ public class EntryListFragment extends Fragment {
 
     @Override public void onDestroy() {
         super.onDestroy();
-        if (sub != null) {
-            sub.unsubscribe();
-        }
+        subscriptionManager.unsubscribe();
     }
 }

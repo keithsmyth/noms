@@ -25,7 +25,6 @@ import java.util.Locale;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -46,6 +45,7 @@ public class EntryFragment extends Fragment {
     @Bind(R.id.chk_in_rules) CheckBox rulesCheck;
     @Bind(R.id.txt_comment) EditText commentText;
 
+    private final SubscriptionManager subscriptionManager = new SubscriptionManager();
     @Override public void onAttach(Activity activity) {
         super.onAttach(activity);
         nav = (Navigatable) activity;
@@ -80,7 +80,7 @@ public class EntryFragment extends Fragment {
             return;
         }
 
-        sub = DataManager.get().saveEntry(entry)
+        subscriptionManager.add(DataManager.get().saveEntry(entry)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Entry>() {
@@ -91,7 +91,7 @@ public class EntryFragment extends Fragment {
                     @Override public void call(Throwable e) {
                         Snackbar.make(getView(), e.getMessage(), Snackbar.LENGTH_SHORT).show();
                     }
-                });
+                }));
     }
 
     private boolean isValid(Entry entry) {
@@ -137,8 +137,6 @@ public class EntryFragment extends Fragment {
 
     @Override public void onDestroy() {
         super.onDestroy();
-        if (sub != null) {
-            sub.unsubscribe();
-        }
+        subscriptionManager.unsubscribe();
     }
 }
