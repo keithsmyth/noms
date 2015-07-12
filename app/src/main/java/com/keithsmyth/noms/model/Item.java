@@ -4,8 +4,17 @@ package com.keithsmyth.noms.model;
  * @author keithsmyth
  */
 public class Item {
+    private String objectId;
     private String name;
     private String category;
+
+    public String getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
+    }
 
     public String getName() {
         return name;

@@ -83,8 +83,8 @@ public class EntryFragment extends Fragment {
         sub = DataManager.get().saveEntry(entry)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Boolean>() {
-                    @Override public void call(Boolean success) {
+                .subscribe(new Action1<Entry>() {
+                    @Override public void call(Entry savedEntry) {
                         nav.previous();
                     }
                 }, new Action1<Throwable>() {

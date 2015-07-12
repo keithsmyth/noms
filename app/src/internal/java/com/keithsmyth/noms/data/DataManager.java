@@ -1,11 +1,14 @@
 package com.keithsmyth.noms.data;
 
+import android.text.TextUtils;
+import android.util.ArrayMap;
 import android.util.Log;
 
 import com.keithsmyth.noms.model.Entry;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
@@ -15,7 +18,7 @@ import rx.Observable;
  */
 public class DataManager {
 
-    private final List<Entry> list = new ArrayList<>();
+    private final Map<String, Entry> entryCache = new ArrayMap<>();
 
     private static DataManager sInstance;
 
@@ -34,14 +37,18 @@ public class DataManager {
         Log.i(getClass().getSimpleName(), log);
     }
 
-    public Observable<List<Entry>> getEntryList() {
-        log("getEntryList " + list.size());
-        return Observable.just(list).delay(1, TimeUnit.SECONDS);
+    public Observable<Collection<Entry>> getEntryList() {
+        log("getEntryList " + entryCache.size());
+        return Observable.just(entryCache.values()).delay(1, TimeUnit.SECONDS); // this will break ordering
     }
 
-    public Observable<Boolean> saveEntry(Entry entry) {
-        log("saveEntry");
-        list.add(entry);
-        return Observable.just(true).delay(1, TimeUnit.SECONDS);
+    public Observable<Entry> saveEntry(Entry entry) {
+        // mimic random objectId from Parse
+        if (TextUtils.isEmpty(entry.getObjectId())) {
+            entry.setObjectId(UUID.randomUUID().toString());
+        }
+        log("saveEntry " + entry.getObjectId());
+        entryCache.put(entry.getObjectId(), entry);
+        return Observable.just(entry).delay(1, TimeUnit.SECONDS);
     }
 }

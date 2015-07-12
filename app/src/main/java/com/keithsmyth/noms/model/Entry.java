@@ -7,12 +7,21 @@ import java.util.Date;
  */
 public class Entry {
 
+    private String objectId;
     private Date date;
     private String category;
     private int amount;
     private String description;
     private boolean inRules;
     private String comment;
+
+    public String getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
+    }
 
     public Date getDate() {
         return date;

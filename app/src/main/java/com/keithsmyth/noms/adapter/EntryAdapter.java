@@ -11,6 +11,7 @@ import com.keithsmyth.noms.R;
 import com.keithsmyth.noms.model.Entry;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import butterknife.Bind;
@@ -21,11 +22,11 @@ import rx.functions.Action1;
  * @author keithsmyth
  */
 public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHolder>
-        implements Action1<List<Entry>> {
+        implements Action1<Collection<Entry>> {
 
     private final List<Entry> entryList = new ArrayList<>();
 
-    @Override public void call(List<Entry> list) {
+    @Override public void call(Collection<Entry> list) {
         entryList.clear();
         entryList.addAll(list);
         notifyDataSetChanged();
