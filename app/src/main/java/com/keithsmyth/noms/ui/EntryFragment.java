@@ -183,6 +183,11 @@ public class EntryFragment extends Fragment {
         return isValid;
     }
 
+    @Override public void onStop() {
+        super.onStop();
+        UiUtils.closeKeyboard(getActivity(), getView());
+    }
+
     @Override public void onDestroy() {
         super.onDestroy();
         subscriptionManager.unsubscribe();
